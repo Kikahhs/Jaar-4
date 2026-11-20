@@ -11,7 +11,7 @@ plt.style.use('seaborn-v0_8')
 plt.style.use('bmh')
 
 # loading data
-path = "/data/home/s18097847/notebooks/Jaar-4/Data/"
+path = "/data/home/s22073884/notebooks/Jaar-4/Data/"
 InUse_Bikes = pd.read_excel(path+'Metric Store - InUse Bikes.xlsx')
 Subscriptions = pd.read_excel(path+'Metric Store - Subscriptions.xlsx')
 
@@ -34,7 +34,8 @@ demand_df = demand_df[demand_df['Colour Category'] != 'Totaal']
 class Demand:
     def __init__(self, input_df=demand_df):
         self.input_df = input_df
-
+    
+    
     @property
     def unique_locations(self):
         return list(self.input_df['Geographical Indicator'].unique())
@@ -46,19 +47,34 @@ class Demand:
     def demand_per_location(self, location):
         return self.input_df[self.input_df['Geographical Indicator'] == location]
 
+    def demand_per_location_summed(self, location):
+        demand_df = self.demand_per_location(location)
+        demand_df = demand_df.drop(["Geographical Indicator","Colour Category"], axis=1)
+        demand_df.loc['total']= demand_df.sum()
+        return demand_df.loc['total']
+    
     def demand_per_location_and_bike_type(self, location, bike_type):
         demand_per_location = self.demand_per_location(location)
         return demand_per_location[demand_per_location['Colour Category'] == bike_type]
-
+    
     def return_dict_info(self, location, bike_type):
         try:
             info_dict = dict(self.demand_per_location_and_bike_type(location, bike_type).iloc[0])
             info_dict = dict(list(info_dict.items())[2:])
         except IndexError:
             raise ValueError('No info over location or bike type.')
-        
-        return info_dict
 
+        return info_dict
+        
+    def demand_total_stores(self, store_list):
+        total_merged = {}
+        for store in store_list:
+            for key, value in self.demand_per_location_summed(store).items():
+                total_merged[key] = total_merged.get(key, 0) + value
+        return total_merged
+
+
+    
     def plot_demand_per_location_and_bike_type(self, location, bike_type):
         info_dict = self.return_dict_info(location, bike_type) # retrieving the data
  
@@ -72,3 +88,19 @@ class Demand:
         plt.ylabel('Aantal Fietsen [Subscription - InUse Bikes]')
         plt.title(f'Vraag in {location} voor {bike_type}')
         plt.show()
+
+    def plot_demand_total(self, dictionary1, dictionary2, magazijnnaam):
+            lists1 = sorted(dictionary1.items()) # sorted by key, return a list of tuples
+            x1, y1 = zip(*lists1) # unpack a list of pairs into two tuples
+            plt.plot(x1, y1, label = 'Vraag winkels')
+            lists2 = sorted(dictionary2.items()) # sorted by key, return a list of tuples
+            x2, y2 = zip(*lists2) # unpack a list of pairs into two tuples
+            plt.plot(x2, y2, label = 'Capaciteit magazijn Den Hoorn')
+            plt.xticks(rotation=90)
+            plt.xlabel('Maand')
+            plt.ylabel('Aantal Fietsen')
+            ax = plt.gca() 
+            ax.set_facecolor("white")
+            ax.legend(frameon=True, facecolor= "inherit")
+            plt.title('Vraag winkels t.o.v. capaciteit Den Hoorn')
+            return plt.show()

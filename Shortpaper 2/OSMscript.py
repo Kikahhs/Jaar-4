@@ -71,7 +71,7 @@ class OSMVis:
                         location=(lat, lon),
                         icon=folium.DivIcon(
                             icon_size=(150, 20),
-                            icon_anchor=(-5, 25),   # 5 px rechts, 25 px boven het punt
+                            icon_anchor=(-5, 25),  
                             html=f"""
                             <div style="font-size: 10pt; color: {color}; font-weight: bold;
                                         white-space: nowrap;">

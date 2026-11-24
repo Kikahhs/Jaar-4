@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 plt.style.use('bmh')
 
 # loading data
-path = "/data/home/s18097847/notebooks/Jaar-4/Data/"
+path = "/data/home/s22073884/notebooks/Jaar-4/Data/"
 inventory = pd.read_excel(path+'Metric Store - Inventory.xlsx')
 capacity = pd.read_excel(path+'Storage capacity split.xlsx')
 

@@ -11,7 +11,7 @@ plt.style.use('seaborn-v0_8')
 plt.style.use('bmh')
 
 # loading data
-path = "/data/home/s18097847/notebooks/Jaar-4/Data/"
+path = "/data/home/s22073884/notebooks/Jaar-4/Data/"
 InUse_Bikes = pd.read_excel(path+'Metric Store - InUse Bikes.xlsx')
 Subscriptions = pd.read_excel(path+'Metric Store - Subscriptions.xlsx')
 

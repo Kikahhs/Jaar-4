@@ -34,7 +34,7 @@ def maak_kaart():
 
 class OSMVis:
 
-    def kaart(self, tours, alle_coordinaten, ftld, rd):
+    def kaart(self, tours, alle_coordinaten, ftld, rd, text=True):
         kaart = maak_kaart()  
         legend_dict = {}
         stedenlijst = ['Depot', 'Rotterdam', 'Leiden', 'Den Haag', 'Delft', 'Breda', 'Utrecht', 'Amsterdam']
@@ -60,26 +60,27 @@ class OSMVis:
                     fill_color=color,
                 ).add_to(kaart)
             legend_dict[i] = color
-            for j in tour:
-                if j != 0:
-                    stad = stedenlijst[j]
-                    full_truck_load = int(ftld.get(stad))
-                    remainder = int(rd.get(stad))
-                    lat, lon = winkels.get(stad)
-            
-                    folium.Marker(
-                        location=(lat, lon),
-                        icon=folium.DivIcon(
-                            icon_size=(150, 20),
-                            icon_anchor=(-5, 25),  
-                            html=f"""
-                            <div style="font-size: 10pt; color: {color}; font-weight: bold;
-                                        white-space: nowrap;">
-                                        {full_truck_load} FTL, {remainder} rest
-                            </div>
-                            """
-                        ),
-                    ).add_to(kaart)
+            if text:
+                for j in tour:
+                    if j != 0:
+                        stad = stedenlijst[j]
+                        full_truck_load = int(ftld.get(stad))
+                        remainder = int(rd.get(stad))
+                        lat, lon = winkels.get(stad)
+                
+                        folium.Marker(
+                            location=(lat, lon),
+                            icon=folium.DivIcon(
+                                icon_size=(150, 20),
+                                icon_anchor=(-5, 25),  
+                                html=f"""
+                                <div style="font-size: 10pt; color: {color}; font-weight: bold;
+                                            white-space: nowrap;">
+                                            {full_truck_load} FTL, {remainder} rest
+                                </div>
+                                """
+                            ),
+                        ).add_to(kaart)
                     
                 
             
